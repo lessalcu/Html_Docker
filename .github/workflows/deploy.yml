@@ -30,16 +30,4 @@ jobs:
             docker stop sad_lewin || true
             docker rm sad_lewin || true
             docker pull lssalas/html-project:latest
-            docker run -d --name sad_lewin -p 8080:80 lssalas/html-project:latest
-
-      # Verificar contenedor
-      - name: Verify Deployment
-        uses: appleboy/ssh-action@v0.1.6
-        with:
-          host: ${{ secrets.EC2_INSTANCE_1 }}
-          username: ec2-user
-          key: ${{ secrets.EC2_SSH_KEY }}
-          port: 22
-          script: |
-            docker ps
-            curl -I http://localhost:8080 || echo "No se puede acceder al contenedor"
+            docker run -d --name sad_lewin -p 80:80 lssalas/html-project:latest
