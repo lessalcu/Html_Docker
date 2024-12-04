@@ -27,10 +27,10 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            docker stop html-container || true
-            docker rm html-container || true
+            docker stop sad_lewin || true
+            docker rm sad_lewin || true
             docker pull lssalas/html-project:latest
-            docker run -d --name html-container -p 8080:80 lssalas/html-project:latest
+            docker run -d --name sad_lewin -p 8080:80 lssalas/html-project:latest
 
       # Verificar contenedor
       - name: Verify Deployment
