@@ -1,0 +1,33 @@
+name: Deploy Docker Container to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Paso 1: Configurar la clave SSH para acceder a las instancias EC2
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 54.174.211.70 >> ~/.ssh/known_hosts
+
+      # Paso 2: Desplegar instancia 
+      - name: Deploy to Instance 1
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.EC2_INSTANCE_1 }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            docker stop html-container || true
+            docker rm html-container || true
+            docker pull lssalas/html-project:latest
+            docker run -d -p 80:80 lssalas/html-project:latest
